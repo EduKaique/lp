@@ -23,15 +23,14 @@ void lancarDado(Historico *dado) {
     }
 
     if (dado->lancamentos > 1) {
-printf("++++++++++++++++++++\n");
-printf("+    Total: %5d  +\n", dado->total);
-printf("++++++++++++++++++++\n");
+        printf("++++++++++++++++++++\n");
+        printf("+    Total: %5d  +\n", dado->total);
+        printf("++++++++++++++++++++\n");
 
-    // Capturando a data e hora do lançamento
-    time_t agora = time(NULL);
-    struct tm *tempo = localtime(&agora);
-    strftime(dado->dataHora, sizeof(dado->dataHora), "%d/%m/%Y %H:%M:%S", tempo);
-        
+        // Capturando a data e hora do lançamento
+        time_t agora = time(NULL);
+        struct tm *tempo = localtime(&agora);
+        strftime(dado->dataHora, sizeof(dado->dataHora), "%d/%m/%Y %H:%M:%S", tempo);
     }
 }
 
@@ -47,6 +46,28 @@ void salvarLancamentoEmArquivo(Historico dado, const char *nomeArquivo) {
             dado.dataHora, dado.lados, dado.lancamentos, dado.total);
 
     fclose(arquivo);
+}
+
+// Função para limpar o buffer de entrada
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+// Função para ler um número inteiro de forma segura
+int lerInteiro(const char *mensagem) {
+    int valor;
+    int status;
+    do {
+        printf("%s", mensagem);
+        status = scanf("%d", &valor);
+        if (status != 1) {
+            printf("Entrada inválida. Tente novamente.\n");
+            limparBuffer(); // Limpa o buffer de entrada
+        }
+    } while (status != 1);
+    limparBuffer(); // Garante que nenhum caractere residual permaneça
+    return valor;
 }
 
 int main() {
@@ -68,8 +89,7 @@ int main() {
         printf("7. 100 lados\n");
         printf("8. Personalizado\n");
         printf("0. Finalizar programa\n");
-        printf("Digite sua escolha: ");
-        scanf("%d", &escolha);
+        escolha = lerInteiro("Digite sua escolha: ");
 
         if (escolha == 0) {
             printf("\nEncerrando o programa. Obrigado por jogar!\n");
@@ -86,8 +106,7 @@ int main() {
             case 6: dado.lados = 20; break;
             case 7: dado.lados = 100; break;
             case 8:
-                printf("\nDigite o número de lados para o dado personalizado: ");
-                scanf("%d", &dado.lados);
+                dado.lados = lerInteiro("Digite o número de lados para o dado personalizado: ");
                 if (dado.lados <= 0) {
                     printf("Número de lados inválido.\n");
                     continue;
@@ -98,8 +117,7 @@ int main() {
                 continue;
         }
 
-        printf("\nDigite o número de vezes para lançar o dado: ");
-        scanf("%d", &dado.lancamentos);
+        dado.lancamentos = lerInteiro("\nDigite o número de vezes para lançar o dado: ");
 
         if (dado.lancamentos <= 0) {
             printf("Número de lançamentos inválido. Tente novamente.\n");
@@ -109,6 +127,6 @@ int main() {
         lancarDado(&dado); // Realiza o lançamento
         salvarLancamentoEmArquivo(dado, nomeArquivo); // Salva os dados no arquivo
 
-    } while (escolha !=0);
-return 0;
+    } while (escolha != 0);
+    return 0;
 }
