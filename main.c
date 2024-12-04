@@ -23,14 +23,16 @@ void lancarDado(Historico *dado) {
     }
 
     if (dado->lancamentos > 1) {
-        printf("Total: %d\n", dado->total);
-    }
+printf("++++++++++++++++++++\n");
+printf("+    Total: %5d  +\n", dado->total);
+printf("++++++++++++++++++++\n");
 
     // Capturando a data e hora do lançamento
     time_t agora = time(NULL);
     struct tm *tempo = localtime(&agora);
     strftime(dado->dataHora, sizeof(dado->dataHora), "%d/%m/%Y %H:%M:%S", tempo);
-    printf("Lançamento registrado em: %s\n", dado->dataHora);
+        
+    }
 }
 
 // Função para salvar os dados no arquivo
@@ -45,7 +47,6 @@ void salvarLancamentoEmArquivo(Historico dado, const char *nomeArquivo) {
             dado.dataHora, dado.lados, dado.lancamentos, dado.total);
 
     fclose(arquivo);
-    printf("Dados salvos no arquivo '%s'.\n", nomeArquivo);
 }
 
 int main() {
@@ -108,7 +109,6 @@ int main() {
         lancarDado(&dado); // Realiza o lançamento
         salvarLancamentoEmArquivo(dado, nomeArquivo); // Salva os dados no arquivo
 
-    } while (escolha != 0);
-
-    return 0;
+    } while (escolha !=0);
+return 0;
 }
